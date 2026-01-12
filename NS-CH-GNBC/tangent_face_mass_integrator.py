@@ -10,12 +10,10 @@ from fealpy.functional import bilinear_integral
 from fealpy.fem.integrator import (
     LinearInt, OpInt, FaceInt,
     enable_cache,
-    assemblymethod,
-    CoefLike
 )
 
 class TangentFaceMassIntegrator(LinearInt, OpInt, FaceInt):
-    def __init__(self, coef: Optional[CoefLike]=None, q: Optional[int]=None, *,
+    def __init__(self, coef=None, q: Optional[int]=None, *,
                  threshold: Optional[Threshold]=None,
                  batched: bool=False):
         super().__init__()

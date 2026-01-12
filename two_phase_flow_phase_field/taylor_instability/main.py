@@ -1,8 +1,9 @@
 from fealpy.backend import backend_manager as bm
+bm.set_backend('pytorch')
 from fealpy.cfd.equation import IncompressibleNS
 from fealpy.cfd.equation import CahnHilliard
-from fealpy.cfd.simulation.fem import BDF2
-from fealpy.cfd.simulation.fem import CahnHilliardModel 
+from fealpy.cfd.simulation.fem.incompressible_ns import BDF2
+from fealpy.cfd.simulation.fem import CahnHilliardFEM 
 from pde import RayleignTaylor
 from solver import two_phase_phield_solver
 from fealpy.decorator import barycentric
@@ -14,8 +15,7 @@ import psutil
 import time 
 
 
-bm.set_backend('pytorch')
-bm.set_default_device('cuda')
+#bm.set_default_device('cuda')
 
 dt = 0.00125*bm.sqrt(bm.array(2))
 pde = RayleignTaylor()
@@ -25,13 +25,13 @@ mesh = pde.init_mesh(nx=64, ny=256)
 #pde.epsilon = 0.08*bm.sqrt(2*bm.min(mesh.entity_measure('edge')))
 
 ns_eqaution = IncompressibleNS(pde,init_variables=False) 
-ns_solver = BDF2(ns_eqaution)
+ns_solver = BDF2(ns_eqaution, mesh)
 ns_solver.dt = dt
 
 phispace = ns_solver.uspace.scalar_space
 
 ch_equation = CahnHilliard(pde, init_variables=False)
-ch_solver = CahnHilliardModel(ch_equation, phispace)
+ch_solver = CahnHilliardFEM(ch_equation, phispace)
 ch_solver.dt = dt
 
 solver = two_phase_phield_solver(pde) 

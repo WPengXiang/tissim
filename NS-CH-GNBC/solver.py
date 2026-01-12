@@ -150,7 +150,7 @@ class Solver():
         A00.add_integrator(M)
         A00.add_integrator(self.u_C)
         A00.add_integrator(D)
-        A00.add_integrator(FM)
+        #A00.add_integrator(FM)
 
         A01 = BilinearForm((pspace, uspace))
         A01.add_integrator(PressWorkIntegrator(coef=-2*dt, q=q))
